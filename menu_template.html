@@ -60,7 +60,7 @@
             padding: 0 80px 80px;
             display: flex;
             overflow-x: auto;
-            gap: 40px;
+            gap: 0;
             scroll-behavior: smooth;
             scrollbar-width: thin;
             scrollbar-color: #c8a068 #2a2a2a;
@@ -204,100 +204,67 @@
                 title: '前菜',
                 subtitle: 'ぜんさい',
                 subtitleEn: 'ZENSAI',
-                images: [
-                    'images/zensai_1.png',
-                    'images/zensai_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/zensai/'
             },
             wanmono: {
                 title: '蒸料理',
                 subtitle: 'わんもの・むしもの',
                 subtitleEn: 'WAN MONO & MUSHI MONO',
-                images: [
-                    'images/wanmono_1.png',
-                    'images/wanmono_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/wanmono/'
             },
             agemono: {
                 title: '揚げ物',
                 subtitle: 'あげもの',
                 subtitleEn: 'AGEMONO',
-                images: [
-                    'images/agemono_1.png',
-                    'images/agemono_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/agemono/'
             },
             yakimono: {
                 title: '焼き物',
                 subtitle: 'やきもの',
                 subtitleEn: 'YAKIMONO',
-                images: [
-                    'images/yakimono_1.png',
-                    'images/yakimono_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/yakimono/'
             },
             ippin: {
                 title: '一品料理',
                 subtitle: 'いっぴんりょうり',
                 subtitleEn: 'IPPIN RYORI',
-                images: [
-                    'images/ippin_1.png',
-                    'images/ippin_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/ippin/'
             },
             menrui: {
                 title: '麺類',
                 subtitle: 'めんるい',
                 subtitleEn: 'MENRUI',
-                images: [
-                    'images/menrui_1.png',
-                    'images/menrui_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/menrui/'
             },
             curry: {
                 title: 'カレー丼',
                 subtitle: 'かれーどん',
                 subtitleEn: 'CURRY DON',
-                images: [
-                    'images/curry_1.png',
-                    'images/curry_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/curry/'
             },
             donburi: {
                 title: '丼物',
                 subtitle: 'どんぶり',
                 subtitleEn: 'DONBURI',
-                images: [
-                    'images/donburi_1.png',
-                    'images/donburi_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/donburi/'
             },
             setmeal: {
                 title: '定食',
                 subtitle: 'ていしょく',
                 subtitleEn: 'SET MEAL',
-                images: [
-                    'images/setmeal_1.png',
-                    'images/setmeal_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/setmeal/'
             },
             dessert: {
                 title: 'デザート',
                 subtitle: 'でざーと',
                 subtitleEn: 'DESSERT',
-                images: [
-                    'images/dessert_1.png',
-                    'images/dessert_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/dessert/'
             },
             beverage: {
                 title: '飲み物',
                 subtitle: 'のみもの',
                 subtitleEn: 'BEVERAGE',
-                images: [
-                    'images/beverage_1.png',
-                    'images/beverage_2.png'
-                ]
+                baseUrl: 'https://media.kunzzgroup.com/grand/beverage/'
             }
         };
 
@@ -331,25 +298,73 @@
                 document.getElementById('page-subtitle-en').textContent = config.subtitleEn;
                 
                 // 加载图片
-                loadMenuImages(config.images);
+                loadMenuImages(config.baseUrl, config.title);
             }
         }
 
-        // 加载菜单图片
-        function loadMenuImages(imagePaths) {
+        // 自动加载菜单图片
+        async function loadMenuImages(baseUrl, categoryName) {
             const gallery = document.getElementById('menu-gallery');
-            gallery.innerHTML = '';
             
-            imagePaths.forEach((imagePath, index) => {
-                const img = document.createElement('img');
-                img.src = imagePath;
-                img.alt = `菜单图片 ${index + 1}`;
-                img.className = 'menu-image';
-                img.onerror = function() {
-                    console.warn(`Image not found: ${imagePath}`);
-                };
-                gallery.appendChild(img);
-            });
+            // 显示加载动画
+            gallery.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
+            
+            let imageIndex = 1;
+            const loadedImages = [];
+            let shouldStop = false;
+            
+            // 尝试加载图片，直到找不到为止
+            while (!shouldStop) {
+                const imageUrl = `${baseUrl}${imageIndex}.png`;
+                
+                try {
+                    const response = await fetch(imageUrl, { method: 'HEAD' });
+                    if (response.ok) {
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        img.alt = `${categoryName}菜单页面${imageIndex}`;
+                        img.className = 'menu-image';
+                        img.onload = function() {
+                            loadedImages.push(img);
+                            updateGallery();
+                        };
+                        img.onerror = function() {
+                            // 如果图片加载失败，标记停止
+                            shouldStop = true;
+                        };
+                    } else {
+                        // 如果HTTP状态不是200，停止尝试
+                        shouldStop = true;
+                    }
+                } catch (error) {
+                    // 如果请求失败，停止尝试
+                    shouldStop = true;
+                }
+                
+                imageIndex++;
+                
+                // 防止无限循环，最多尝试50张图片
+                if (imageIndex > 50) shouldStop = true;
+            }
+            
+            // 更新画廊显示
+            function updateGallery() {
+                if (loadedImages.length > 0) {
+                    gallery.innerHTML = '';
+                    loadedImages.forEach(img => {
+                        gallery.appendChild(img);
+                    });
+                } else {
+                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                }
+            }
+            
+            // 如果3秒后还没有加载到任何图片，显示错误信息
+            setTimeout(() => {
+                if (loadedImages.length === 0) {
+                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                }
+            }, 3000);
         }
 
         // 初始化页面

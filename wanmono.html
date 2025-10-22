@@ -122,7 +122,7 @@
             padding: 0 80px 80px;
             display: flex;
             overflow-x: auto;
-            gap: 40px;
+            gap: 0;
             scroll-behavior: smooth;
             scrollbar-width: thin;
             scrollbar-color: #c8a068 #2a2a2a;
@@ -200,6 +200,31 @@
             0%, 100% { opacity: 0.7; }
             50% { opacity: 1; }
         }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #c8a068;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #c8a068;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -234,9 +259,8 @@
         </div>
 
         <!-- 菜单图片画廊 -->
-        <div class="menu-gallery">
-            <img src="images/wanmono_1.png" alt="蒸料理菜单页面1" class="menu-image">
-            <img src="images/wanmono_2.png" alt="蒸料理菜单页面2" class="menu-image">
+        <div class="menu-gallery" id="menu-gallery">
+            <!-- 图片将通过JavaScript自动加载 -->
         </div>
 
         <!-- 装饰线条 -->
@@ -251,5 +275,76 @@
             THE PICTURES ARE FOR REFERENCE ONLY, PLEASE REFER TO THE ACTUAL PRODUCT
         </div>
     </div>
+
+    <script>
+        // 自动加载菜单图片
+        async function loadMenuImages() {
+            const gallery = document.getElementById('menu-gallery');
+            const baseUrl = 'https://media.kunzzgroup.com/grand/wanmono/';
+            
+            // 显示加载动画
+            gallery.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
+            
+            let imageIndex = 1;
+            const loadedImages = [];
+            let shouldStop = false;
+            
+            // 尝试加载图片，直到找不到为止
+            while (!shouldStop) {
+                const imageUrl = `${baseUrl}${imageIndex}.png`;
+                
+                try {
+                    const response = await fetch(imageUrl, { method: 'HEAD' });
+                    if (response.ok) {
+                        const img = document.createElement('img');
+                        img.src = imageUrl;
+                        img.alt = `蒸料理菜单页面${imageIndex}`;
+                        img.className = 'menu-image';
+                        img.onload = function() {
+                            loadedImages.push(img);
+                            updateGallery();
+                        };
+                        img.onerror = function() {
+                            // 如果图片加载失败，标记停止
+                            shouldStop = true;
+                        };
+                    } else {
+                        // 如果HTTP状态不是200，停止尝试
+                        shouldStop = true;
+                    }
+                } catch (error) {
+                    // 如果请求失败，停止尝试
+                    shouldStop = true;
+                }
+                
+                imageIndex++;
+                
+                // 防止无限循环，最多尝试50张图片
+                if (imageIndex > 50) shouldStop = true;
+            }
+            
+            // 更新画廊显示
+            function updateGallery() {
+                if (loadedImages.length > 0) {
+                    gallery.innerHTML = '';
+                    loadedImages.forEach(img => {
+                        gallery.appendChild(img);
+                    });
+                } else {
+                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                }
+            }
+            
+            // 如果3秒后还没有加载到任何图片，显示错误信息
+            setTimeout(() => {
+                if (loadedImages.length === 0) {
+                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                }
+            }, 3000);
+        }
+        
+        // 页面加载完成后开始加载图片
+        document.addEventListener('DOMContentLoaded', loadMenuImages);
+    </script>
 </body>
 </html>
