@@ -252,8 +252,22 @@
             }, 3000);
         }
         
-        // 页面加载完成后开始加载图片
-        document.addEventListener('DOMContentLoaded', loadMenuImages);
+        // 水平滚动功能
+        function initHorizontalScroll() {
+            const gallery = document.getElementById('menu-gallery');
+            
+            // 监听鼠标滚轮事件，实现水平滚动
+            gallery.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                gallery.scrollLeft += e.deltaY;
+            });
+        }
+
+        // 页面加载完成后开始加载图片和初始化水平滚动
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMenuImages();
+            initHorizontalScroll();
+        });
     </script>
 </body>
 </html>
