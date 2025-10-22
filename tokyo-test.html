@@ -523,6 +523,116 @@
             transform: translateY(0);
         }
 
+        /* ==================== 第四页 - 菜单选择 ==================== */
+        .menu-selection-section {
+            position: relative;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 60px 20px;
+        }
+
+        .menu-selection-container {
+            display: flex;
+            gap: 60px;
+            max-width: 1200px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .menu-option {
+            flex: 1;
+            position: relative;
+            height: 500px;
+            border: 3px solid #c8a068;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .menu-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(200, 160, 104, 0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .menu-option:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(200, 160, 104, 0.3);
+            border-color: #d4af6a;
+        }
+
+        .menu-option:hover::before {
+            opacity: 1;
+        }
+
+        .menu-option-content {
+            text-align: center;
+            color: white;
+            z-index: 1;
+            position: relative;
+        }
+
+        .menu-option-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #c8a068;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .menu-option-subtitle {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 2px;
+        }
+
+        .menu-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .menu-decoration::before,
+        .menu-decoration::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 2px solid #c8a068;
+        }
+
+        .menu-decoration::before {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .menu-decoration::after {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+
     </style>
 </head>
 <body>
@@ -630,6 +740,29 @@
                     <p>诚信为本匠心独运服务至上我们以最真诚的态度对待每一位顾客用心制作每一道料理让顾客感受到家一般的温暖和关怀</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- ==================== 第四页 - 菜单选择 ==================== -->
+    <div class="menu-selection-section">
+        <div class="menu-selection-container">
+            <!-- Sushi & Sashimi 选项 -->
+            <a href="menu.html?category=sushi" class="menu-option">
+                <div class="menu-decoration"></div>
+                <div class="menu-option-content">
+                    <h2 class="menu-option-title">Sushi & Sashimi</h2>
+                    <p class="menu-option-subtitle">寿司与刺身</p>
+                </div>
+            </a>
+
+            <!-- Grand Menu 选项 -->
+            <a href="menu.html?category=grand" class="menu-option">
+                <div class="menu-decoration"></div>
+                <div class="menu-option-content">
+                    <h2 class="menu-option-title">Grand Menu</h2>
+                    <p class="menu-option-subtitle">精选菜单</p>
+                </div>
+            </a>
         </div>
     </div>
 
@@ -801,6 +934,20 @@
                 container.classList.add('has-active');
             }
         }
+
+        // ========== 第四页:菜单选择动画 ==========
+        
+        gsap.to('.menu-selection-container', {
+            opacity: 1,
+            y: 0,
+            duration: 1.2,
+            ease: 'power3.out',
+            scrollTrigger: {
+                trigger: '.menu-selection-section',
+                start: 'top 60%',
+                toggleActions: 'play none none none'
+            }
+        });
     </script>
 </body>
 </html>
