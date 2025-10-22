@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', 'Arial', sans-serif;
+            background: #2a2a2a;
+            overflow-x: hidden;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            margin-left: 20%;
+            width: 80%;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            position: relative;
+        }
+
+        /* 页面标题区域 */
+        .page-header {
+            padding: 60px 80px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .page-title {
+            font-size: 48px;
+            font-weight: 300;
+            color: #ffffff;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .page-subtitle {
+            font-size: 18px;
+            color: #c8a068;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .page-subtitle-en {
+            font-size: 16px;
+            color: #c8a068;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* 菜单图片画廊 */
+        .menu-gallery {
+            padding: 0 80px 80px;
+            display: flex;
+            overflow-x: auto;
+            gap: 40px;
+            scroll-behavior: smooth;
+            scrollbar-width: thin;
+            scrollbar-color: #c8a068 #2a2a2a;
+        }
+
+        .menu-gallery::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .menu-gallery::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        .menu-gallery::-webkit-scrollbar-thumb {
+            background: #c8a068;
+            border-radius: 4px;
+        }
+
+        .menu-gallery::-webkit-scrollbar-thumb:hover {
+            background: #b8945f;
+        }
+
+        .menu-image {
+            flex-shrink: 0;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .menu-image:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 装饰元素 */
+        .decoration-line {
+            position: absolute;
+            top: 50%;
+            right: 40px;
+            width: 2px;
+            height: 200px;
+            background: linear-gradient(to bottom, transparent, #c8a068, transparent);
+            transform: translateY(-50%);
+        }
+
+        /* 页脚免责声明 */
+        .disclaimer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888888;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        /* 滚动提示 */
+        .scroll-hint {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #c8a068;
+            font-size: 14px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            opacity: 0.7;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            color: #c8a068;
+        }
+
+        .loading::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 2px solid #c8a068;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 引入侧边栏 -->
+    <div id="sidebar-container"></div>
+
+    <!-- 主内容区域 -->
+    <div class="main-content">
+        <!-- 页面标题 -->
+        <div class="page-header">
+            <h1 class="page-title" id="page-title">页面标题</h1>
+            <p class="page-subtitle" id="page-subtitle">副标题</p>
+            <p class="page-subtitle-en" id="page-subtitle-en">SUBTITLE</p>
+        </div>
+
+        <!-- 菜单图片画廊 -->
+        <div class="menu-gallery" id="menu-gallery">
+            <!-- 图片将通过JavaScript动态加载 -->
+            <div class="loading">正在加载菜单图片...</div>
+        </div>
+
+        <!-- 装饰线条 -->
+        <div class="decoration-line"></div>
+
+        <!-- 滚动提示 -->
+        <div class="scroll-hint">← 左右滑动查看更多</div>
+
+        <!-- 免责声明 -->
+        <div class="disclaimer">
+            图片只供参考，请依照实物为准<br>
+            THE PICTURES ARE FOR REFERENCE ONLY, PLEASE REFER TO THE ACTUAL PRODUCT
+        </div>
+    </div>
+
+    <script>
+        // 页面配置数据
+        const pageConfig = {
+            zensai: {
+                title: '前菜',
+                subtitle: 'ぜんさい',
+                subtitleEn: 'ZENSAI',
+                images: [
+                    'images/zensai_1.png',
+                    'images/zensai_2.png'
+                ]
+            },
+            wanmono: {
+                title: '蒸料理',
+                subtitle: 'わんもの・むしもの',
+                subtitleEn: 'WAN MONO & MUSHI MONO',
+                images: [
+                    'images/wanmono_1.png',
+                    'images/wanmono_2.png'
+                ]
+            },
+            agemono: {
+                title: '揚げ物',
+                subtitle: 'あげもの',
+                subtitleEn: 'AGEMONO',
+                images: [
+                    'images/agemono_1.png',
+                    'images/agemono_2.png'
+                ]
+            },
+            yakimono: {
+                title: '焼き物',
+                subtitle: 'やきもの',
+                subtitleEn: 'YAKIMONO',
+                images: [
+                    'images/yakimono_1.png',
+                    'images/yakimono_2.png'
+                ]
+            },
+            ippin: {
+                title: '一品料理',
+                subtitle: 'いっぴんりょうり',
+                subtitleEn: 'IPPIN RYORI',
+                images: [
+                    'images/ippin_1.png',
+                    'images/ippin_2.png'
+                ]
+            },
+            menrui: {
+                title: '麺類',
+                subtitle: 'めんるい',
+                subtitleEn: 'MENRUI',
+                images: [
+                    'images/menrui_1.png',
+                    'images/menrui_2.png'
+                ]
+            },
+            curry: {
+                title: 'カレー丼',
+                subtitle: 'かれーどん',
+                subtitleEn: 'CURRY DON',
+                images: [
+                    'images/curry_1.png',
+                    'images/curry_2.png'
+                ]
+            },
+            donburi: {
+                title: '丼物',
+                subtitle: 'どんぶり',
+                subtitleEn: 'DONBURI',
+                images: [
+                    'images/donburi_1.png',
+                    'images/donburi_2.png'
+                ]
+            },
+            setmeal: {
+                title: '定食',
+                subtitle: 'ていしょく',
+                subtitleEn: 'SET MEAL',
+                images: [
+                    'images/setmeal_1.png',
+                    'images/setmeal_2.png'
+                ]
+            },
+            dessert: {
+                title: 'デザート',
+                subtitle: 'でざーと',
+                subtitleEn: 'DESSERT',
+                images: [
+                    'images/dessert_1.png',
+                    'images/dessert_2.png'
+                ]
+            },
+            beverage: {
+                title: '飲み物',
+                subtitle: 'のみもの',
+                subtitleEn: 'BEVERAGE',
+                images: [
+                    'images/beverage_1.png',
+                    'images/beverage_2.png'
+                ]
+            }
+        };
+
+        // 加载侧边栏
+        function loadSidebar() {
+            fetch('sidebar.html')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('sidebar-container').innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading sidebar:', error);
+                });
+        }
+
+        // 根据URL参数或文件名确定当前页面
+        function getCurrentCategory() {
+            const path = window.location.pathname;
+            const filename = path.split('/').pop().split('.')[0];
+            return filename;
+        }
+
+        // 设置页面内容
+        function setPageContent() {
+            const category = getCurrentCategory();
+            const config = pageConfig[category];
+            
+            if (config) {
+                document.getElementById('page-title').textContent = config.title;
+                document.getElementById('page-subtitle').textContent = config.subtitle;
+                document.getElementById('page-subtitle-en').textContent = config.subtitleEn;
+                
+                // 加载图片
+                loadMenuImages(config.images);
+            }
+        }
+
+        // 加载菜单图片
+        function loadMenuImages(imagePaths) {
+            const gallery = document.getElementById('menu-gallery');
+            gallery.innerHTML = '';
+            
+            imagePaths.forEach((imagePath, index) => {
+                const img = document.createElement('img');
+                img.src = imagePath;
+                img.alt = `菜单图片 ${index + 1}`;
+                img.className = 'menu-image';
+                img.onerror = function() {
+                    console.warn(`Image not found: ${imagePath}`);
+                };
+                gallery.appendChild(img);
+            });
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSidebar();
+            setPageContent();
+        });
+    </script>
+</body>
+</html>

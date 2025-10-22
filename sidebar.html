@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Sidebar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20%;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            z-index: 1000;
+            overflow-y: auto;
+            font-family: 'Noto Sans JP', 'Arial', sans-serif;
+        }
+
+        .sidebar-content {
+            padding: 40px 30px;
+        }
+
+        .back-link {
+            display: block;
+            color: #c8a068;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #b8945f;
+        }
+
+        .menu-categories {
+            list-style: none;
+        }
+
+        .menu-categories li {
+            margin-bottom: 20px;
+        }
+
+        .menu-categories a {
+            display: block;
+            color: #666666;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            padding-left: 15px;
+        }
+
+        .menu-categories a:hover {
+            color: #c8a068;
+            border-left-color: #c8a068;
+        }
+
+        .menu-categories a.active {
+            color: #c8a068;
+            font-weight: 600;
+            border-left-color: #c8a068;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <a href="index.html" class="back-link">← Back</a>
+            
+            <ul class="menu-categories">
+                <li><a href="zensai.html" class="menu-link" data-category="zensai">Zensai</a></li>
+                <li><a href="wanmono.html" class="menu-link" data-category="wanmono">Wan Mono & Mushi Mono</a></li>
+                <li><a href="agemono.html" class="menu-link" data-category="agemono">Agemono</a></li>
+                <li><a href="yakimono.html" class="menu-link" data-category="yakimono">Yakimono</a></li>
+                <li><a href="ippin.html" class="menu-link" data-category="ippin">IPPIN Ryori</a></li>
+                <li><a href="menrui.html" class="menu-link" data-category="menrui">Menrui</a></li>
+                <li><a href="curry.html" class="menu-link" data-category="curry">Curry Don</a></li>
+                <li><a href="donburi.html" class="menu-link" data-category="donburi">Donburi</a></li>
+                <li><a href="setmeal.html" class="menu-link" data-category="setmeal">Set Meal</a></li>
+                <li><a href="dessert.html" class="menu-link" data-category="dessert">Dessert</a></li>
+                <li><a href="beverage.html" class="menu-link" data-category="beverage">Beverage</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 根据当前页面高亮对应的菜单项
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentPage = window.location.pathname.split('/').pop().split('.')[0];
+            const menuLinks = document.querySelectorAll('.menu-link');
+            
+            menuLinks.forEach(link => {
+                const category = link.getAttribute('data-category');
+                if (currentPage === category || 
+                    (currentPage === 'wanmono' && category === 'wanmono') ||
+                    (currentPage === 'zensai' && category === 'zensai')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
