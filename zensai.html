@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>前菜 - Zensai</title>
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/InertiaPlugin.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -92,30 +96,21 @@
         /* 菜单图片画廊 */
         .menu-gallery {
             display: flex;
-            overflow-x: auto;
+            overflow: hidden;
             gap: 0;
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: #c8a068 #2a2a2a;
             user-select: none;
+            cursor: grab;
         }
 
-        .menu-gallery::-webkit-scrollbar {
-            height: 8px;
+        .menu-gallery:active {
+            cursor: grabbing;
         }
 
-        .menu-gallery::-webkit-scrollbar-track {
-            background: #2a2a2a;
+        .menu-gallery-container {
+            display: flex;
+            will-change: transform;
         }
 
-        .menu-gallery::-webkit-scrollbar-thumb {
-            background: #c8a068;
-            border-radius: 4px;
-        }
-
-        .menu-gallery::-webkit-scrollbar-thumb:hover {
-            background: #b8945f;
-        }
 
         .menu-image {
             flex-shrink: 0;
@@ -178,7 +173,9 @@
     <div class="main-content">
         <!-- 菜单图片画廊 -->
         <div class="menu-gallery" id="menu-gallery">
-            <!-- 图片将通过JavaScript自动加载 -->
+            <div class="menu-gallery-container" id="gallery-container">
+                <!-- 图片将通过JavaScript自动加载 -->
+            </div>
         </div>
 
     </div>
@@ -186,11 +183,11 @@
     <script>
         // 自动加载菜单图片
         async function loadMenuImages() {
-            const gallery = document.getElementById('menu-gallery');
+            const container = document.getElementById('gallery-container');
             const baseUrl = 'grand/zensai/';
             
             // 显示加载动画
-            gallery.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
+            container.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
             
             let imageIndex = 1;
             const loadedImages = [];
@@ -233,87 +230,60 @@
             // 更新画廊显示
             function updateGallery() {
                 if (loadedImages.length > 0) {
-                    gallery.innerHTML = '';
+                    container.innerHTML = '';
                     loadedImages.forEach(img => {
-                        gallery.appendChild(img);
+                        container.appendChild(img);
                     });
+                    // 图片加载完成后初始化GSAP拖拽
+                    initGSAPDraggable();
                 } else {
-                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
                 }
             }
             
             // 如果3秒后还没有加载到任何图片，显示错误信息
             setTimeout(() => {
                 if (loadedImages.length === 0) {
-                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
                 }
             }, 3000);
         }
         
-        // 水平滚动和拖拽功能
-        function initHorizontalScroll() {
+        // GSAP Draggable 初始化
+        function initGSAPDraggable() {
             const gallery = document.getElementById('menu-gallery');
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+            const container = document.getElementById('gallery-container');
+            
+            // 计算可拖拽的范围
+            const galleryWidth = gallery.offsetWidth;
+            const containerWidth = container.scrollWidth;
+            const maxDrag = containerWidth - galleryWidth;
+            
+            // 创建GSAP Draggable实例
+            Draggable.create(container, {
+                type: "x",
+                bounds: { minX: -maxDrag, maxX: 0 },
+                inertia: true,
+                dragResistance: 0.1,
+                onDrag: function() {
+                    // 拖拽时的回调
+                },
+                onThrowComplete: function() {
+                    // 惯性滚动完成时的回调
+                }
+            });
             
             // 鼠标滚轮水平滚动
             gallery.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                gallery.scrollLeft += e.deltaY * 0.5; // 调整滚动速度
-            });
-
-            // 鼠标拖拽功能
-            gallery.addEventListener('mousedown', (e) => {
-                isDown = true;
-                gallery.classList.add('active');
-                startX = e.pageX - gallery.offsetLeft;
-                scrollLeft = gallery.scrollLeft;
-            });
-
-            gallery.addEventListener('mouseleave', () => {
-                isDown = false;
-                gallery.classList.remove('active');
-            });
-
-            gallery.addEventListener('mouseup', () => {
-                isDown = false;
-                gallery.classList.remove('active');
-            });
-
-            gallery.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.pageX - gallery.offsetLeft;
-                const walk = (x - startX) * 1.5; // 调整拖拽速度
-                gallery.scrollLeft = scrollLeft - walk;
-            });
-
-            // 触摸设备支持
-            gallery.addEventListener('touchstart', (e) => {
-                isDown = true;
-                startX = e.touches[0].pageX - gallery.offsetLeft;
-                scrollLeft = gallery.scrollLeft;
-            });
-
-            gallery.addEventListener('touchend', () => {
-                isDown = false;
-            });
-
-            gallery.addEventListener('touchmove', (e) => {
-                if (!isDown) return;
-                e.preventDefault();
-                const x = e.touches[0].pageX - gallery.offsetLeft;
-                const walk = (x - startX) * 1.5;
-                gallery.scrollLeft = scrollLeft - walk;
+                const currentX = gsap.getProperty(container, "x");
+                const newX = Math.max(-maxDrag, Math.min(0, currentX + e.deltaY * 0.5));
+                gsap.to(container, { x: newX, duration: 0.3, ease: "power2.out" });
             });
         }
 
-        // 页面加载完成后开始加载图片和初始化水平滚动
-        document.addEventListener('DOMContentLoaded', () => {
-            loadMenuImages();
-            initHorizontalScroll();
-        });
+        // 页面加载完成后开始加载图片
+        document.addEventListener('DOMContentLoaded', loadMenuImages);
     </script>
 </body>
 </html>
