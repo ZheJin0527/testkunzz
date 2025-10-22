@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu Template</title>
+    <title>扬物 - Agemono</title>
     <!-- GSAP CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
@@ -19,6 +19,68 @@
             font-family: 'Noto Sans JP', 'Arial', sans-serif;
             background: #2a2a2a;
             overflow-x: hidden;
+        }
+
+        /* 侧边栏 */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20%;
+            height: 100vh;
+            background: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar-content {
+            padding: 40px 30px;
+        }
+
+        .back-link {
+            display: block;
+            color: #c8a068;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 40px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #b8945f;
+        }
+
+        .menu-categories {
+            list-style: none;
+        }
+
+        .menu-categories li {
+            margin-bottom: 20px;
+        }
+
+        .menu-categories a {
+            display: block;
+            color: #666666;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 400;
+            padding: 8px 0;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            padding-left: 15px;
+        }
+
+        .menu-categories a:hover {
+            color: #c8a068;
+            border-left-color: #c8a068;
+        }
+
+        .menu-categories a.active {
+            color: #c8a068;
+            font-weight: 600;
+            border-left-color: #c8a068;
         }
 
         /* 主内容区域 */
@@ -37,12 +99,18 @@
             overflow: hidden;
             gap: 0;
             user-select: none;
+            cursor: grab;
+        }
+
+        .menu-gallery:active {
+            cursor: grabbing;
         }
 
         .menu-gallery-container {
             display: flex;
             will-change: transform;
         }
+
 
         .menu-image {
             flex-shrink: 0;
@@ -78,8 +146,26 @@
     </style>
 </head>
 <body>
-    <!-- 引入侧边栏 -->
-    <div id="sidebar-container"></div>
+    <!-- 侧边栏 -->
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <a href="tokyo-test.html#menu-selection" class="back-link">← Back</a>
+            
+            <ul class="menu-categories">
+                <li><a href="zensai.html">Zensai</a></li>
+                <li><a href="wanmono.html">Wan Mono & Mushi Mono</a></li>
+                <li><a href="agemono.html" class="active">Agemono</a></li>
+                <li><a href="yakimono.html">Yakimono</a></li>
+                <li><a href="ippin.html">IPPIN Ryori</a></li>
+                <li><a href="menrui.html">Menrui</a></li>
+                <li><a href="curry.html">Curry Don</a></li>
+                <li><a href="donburi.html">Donburi</a></li>
+                <li><a href="setmeal.html">Set Meal</a></li>
+                <li><a href="dessert.html">Dessert</a></li>
+                <li><a href="beverage.html">Beverage</a></li>
+            </ul>
+        </div>
+    </div>
 
     <!-- 主内容区域 -->
     <div class="main-content">
@@ -89,116 +175,14 @@
                 <!-- 图片将通过JavaScript自动加载 -->
             </div>
         </div>
+
     </div>
 
     <script>
-        // 页面配置数据
-        const pageConfig = {
-            zensai: {
-                title: '前菜',
-                subtitle: 'ぜんさい',
-                subtitleEn: 'ZENSAI',
-                baseUrl: 'grand/zensai/'
-            },
-            wanmono: {
-                title: '蒸料理',
-                subtitle: 'わんもの・むしもの',
-                subtitleEn: 'WAN MONO & MUSHI MONO',
-                baseUrl: 'grand/wanmono/'
-            },
-            agemono: {
-                title: '揚げ物',
-                subtitle: 'あげもの',
-                subtitleEn: 'AGEMONO',
-                baseUrl: 'https://media.kunzzgroup.com/grand/agemono/'
-            },
-            yakimono: {
-                title: '焼き物',
-                subtitle: 'やきもの',
-                subtitleEn: 'YAKIMONO',
-                baseUrl: 'https://media.kunzzgroup.com/grand/yakimono/'
-            },
-            ippin: {
-                title: '一品料理',
-                subtitle: 'いっぴんりょうり',
-                subtitleEn: 'IPPIN RYORI',
-                baseUrl: 'https://media.kunzzgroup.com/grand/ippin/'
-            },
-            menrui: {
-                title: '麺類',
-                subtitle: 'めんるい',
-                subtitleEn: 'MENRUI',
-                baseUrl: 'https://media.kunzzgroup.com/grand/menrui/'
-            },
-            curry: {
-                title: 'カレー丼',
-                subtitle: 'かれーどん',
-                subtitleEn: 'CURRY DON',
-                baseUrl: 'https://media.kunzzgroup.com/grand/curry/'
-            },
-            donburi: {
-                title: '丼物',
-                subtitle: 'どんぶり',
-                subtitleEn: 'DONBURI',
-                baseUrl: 'https://media.kunzzgroup.com/grand/donburi/'
-            },
-            setmeal: {
-                title: '定食',
-                subtitle: 'ていしょく',
-                subtitleEn: 'SET MEAL',
-                baseUrl: 'https://media.kunzzgroup.com/grand/setmeal/'
-            },
-            dessert: {
-                title: 'デザート',
-                subtitle: 'でざーと',
-                subtitleEn: 'DESSERT',
-                baseUrl: 'https://media.kunzzgroup.com/grand/dessert/'
-            },
-            beverage: {
-                title: '飲み物',
-                subtitle: 'のみもの',
-                subtitleEn: 'BEVERAGE',
-                baseUrl: 'https://media.kunzzgroup.com/grand/beverage/'
-            }
-        };
-
-        // 加载侧边栏
-        function loadSidebar() {
-            fetch('sidebar.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('sidebar-container').innerHTML = data;
-                })
-                .catch(error => {
-                    console.error('Error loading sidebar:', error);
-                });
-        }
-
-        // 根据URL参数或文件名确定当前页面
-        function getCurrentCategory() {
-            const path = window.location.pathname;
-            const filename = path.split('/').pop().split('.')[0];
-            return filename;
-        }
-
-        // 设置页面内容
-        function setPageContent() {
-            const category = getCurrentCategory();
-            const config = pageConfig[category];
-            
-            if (config) {
-                document.getElementById('page-title').textContent = config.title;
-                document.getElementById('page-subtitle').textContent = config.subtitle;
-                document.getElementById('page-subtitle-en').textContent = config.subtitleEn;
-                
-                // 加载图片
-                loadMenuImages(config.baseUrl, config.title);
-            }
-        }
-
         // 自动加载菜单图片
-        async function loadMenuImages(baseUrl, categoryName) {
+        async function loadMenuImages() {
             const container = document.getElementById('gallery-container');
+            const baseUrl = 'grand/agemono/';
             
             // 显示加载动画
             container.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
@@ -216,7 +200,7 @@
                     if (response.ok) {
                         const img = document.createElement('img');
                         img.src = imageUrl;
-                        img.alt = `${categoryName}菜单页面${imageIndex}`;
+                        img.alt = `扬物菜单页面${imageIndex}`;
                         img.className = 'menu-image';
                         img.onload = function() {
                             loadedImages.push(img);
@@ -262,7 +246,7 @@
                 }
             }, 3000);
         }
-
+        
         // GSAP Draggable 初始化
         function initGSAPDraggable() {
             const gallery = document.getElementById('menu-gallery');
@@ -293,24 +277,13 @@
                         inertia: true,
                         dragResistance: 0.1,
                         throwResistance: 2000,
-                        onDragStart: function() {
-                            // 拖拽开始时改变光标
-                            gallery.style.cursor = 'grabbing';
-                        },
                         onDrag: function() {
                             // 拖拽时的回调
-                        },
-                        onDragEnd: function() {
-                            // 拖拽结束时恢复光标
-                            gallery.style.cursor = 'grab';
                         },
                         onThrowComplete: function() {
                             // 惯性滚动完成时的回调
                         }
                     });
-                    
-                    // 设置初始光标状态
-                    gallery.style.cursor = 'grab';
                 }
                 
                 // 鼠标滚轮水平滚动
@@ -364,11 +337,8 @@
             }, 100);
         }
 
-        // 初始化页面
-        document.addEventListener('DOMContentLoaded', function() {
-            loadSidebar();
-            setPageContent();
-        });
+        // 页面加载完成后开始加载图片
+        document.addEventListener('DOMContentLoaded', loadMenuImages);
     </script>
 </body>
 </html>
