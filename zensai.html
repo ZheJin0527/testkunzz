@@ -291,7 +291,7 @@
             
             // 尝试加载图片，直到找不到为止
             while (!shouldStop) {
-                const imageUrl = `${baseUrl}${imageIndex}.png`;
+                const imageUrl = `${baseUrl}${imageIndex}.jpg`;
                 
                 try {
                     const response = await fetch(imageUrl, { method: 'HEAD' });
