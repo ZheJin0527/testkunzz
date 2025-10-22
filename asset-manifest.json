@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/testkunzz/static/css/main.d7cf858e.css",
+    "main.js": "/testkunzz/static/js/main.4f9f3c60.js",
+    "index.html": "/testkunzz/index.html",
+    "main.d7cf858e.css.map": "/testkunzz/static/css/main.d7cf858e.css.map",
+    "main.4f9f3c60.js.map": "/testkunzz/static/js/main.4f9f3c60.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d7cf858e.css",
+    "static/js/main.4f9f3c60.js"
+  ]
+}
