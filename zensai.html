@@ -98,6 +98,12 @@
             scroll-behavior: smooth;
             scrollbar-width: thin;
             scrollbar-color: #c8a068 #2a2a2a;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .menu-gallery:active {
+            cursor: grabbing;
         }
 
         .menu-gallery::-webkit-scrollbar {
@@ -125,47 +131,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        /* 装饰元素 */
-        .decoration-line {
-            position: absolute;
-            top: 50%;
-            right: 40px;
-            width: 2px;
-            height: 200px;
-            background: linear-gradient(to bottom, transparent, #c8a068, transparent);
-            transform: translateY(-50%);
-        }
-
-        /* 页脚免责声明 */
-        .disclaimer {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #888888;
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        /* 滚动提示 */
-        .scroll-hint {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #c8a068;
-            font-size: 14px;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            opacity: 0.7;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
 
         /* 加载动画 */
         .loading {
@@ -222,17 +187,6 @@
             <!-- 图片将通过JavaScript自动加载 -->
         </div>
 
-        <!-- 装饰线条 -->
-        <div class="decoration-line"></div>
-
-        <!-- 滚动提示 -->
-        <div class="scroll-hint">← 左右滑动查看更多</div>
-
-        <!-- 免责声明 -->
-        <div class="disclaimer">
-            图片只供参考，请依照实物为准<br>
-            THE PICTURES ARE FOR REFERENCE ONLY, PLEASE REFER TO THE ACTUAL PRODUCT
-        </div>
     </div>
 
     <script>
@@ -302,8 +256,63 @@
             }, 3000);
         }
         
-        // 页面加载完成后开始加载图片
-        document.addEventListener('DOMContentLoaded', loadMenuImages);
+        // 拖拽功能
+        function initDragScroll() {
+            const gallery = document.getElementById('menu-gallery');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            gallery.addEventListener('mousedown', (e) => {
+                isDown = true;
+                gallery.classList.add('active');
+                startX = e.pageX - gallery.offsetLeft;
+                scrollLeft = gallery.scrollLeft;
+            });
+
+            gallery.addEventListener('mouseleave', () => {
+                isDown = false;
+                gallery.classList.remove('active');
+            });
+
+            gallery.addEventListener('mouseup', () => {
+                isDown = false;
+                gallery.classList.remove('active');
+            });
+
+            gallery.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - gallery.offsetLeft;
+                const walk = (x - startX) * 2; // 调整拖拽速度
+                gallery.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸设备支持
+            gallery.addEventListener('touchstart', (e) => {
+                isDown = true;
+                startX = e.touches[0].pageX - gallery.offsetLeft;
+                scrollLeft = gallery.scrollLeft;
+            });
+
+            gallery.addEventListener('touchend', () => {
+                isDown = false;
+            });
+
+            gallery.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.touches[0].pageX - gallery.offsetLeft;
+                const walk = (x - startX) * 2;
+                gallery.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // 页面加载完成后开始加载图片和初始化拖拽
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMenuImages();
+            initDragScroll();
+        });
     </script>
 </body>
 </html>
