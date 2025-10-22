@@ -193,7 +193,7 @@
             
             // 尝试加载图片，跳过不存在的图片
             while (!shouldStop) {
-                const imageUrl = `${baseUrl}${imageIndex}.jpg`;
+                const imageUrl = `${baseUrl}${imageIndex}.jpg?t=${Date.now()}`;
                 
                 try {
                     const response = await fetch(imageUrl, { method: 'HEAD' });
