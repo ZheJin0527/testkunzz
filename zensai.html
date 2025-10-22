@@ -98,6 +98,11 @@
             scrollbar-width: thin;
             scrollbar-color: #c8a068 #2a2a2a;
             user-select: none;
+            cursor: grab;
+        }
+
+        .menu-gallery:active {
+            cursor: grabbing;
         }
 
 
@@ -251,14 +256,62 @@
             }, 3000);
         }
         
-        // 水平滚动功能
+        // 水平滚动和拖拽功能
         function initHorizontalScroll() {
             const gallery = document.getElementById('menu-gallery');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
             
-            // 监听鼠标滚轮事件，实现水平滚动
+            // 鼠标滚轮水平滚动
             gallery.addEventListener('wheel', (e) => {
                 e.preventDefault();
-                gallery.scrollLeft += e.deltaY;
+                gallery.scrollLeft += e.deltaY * 0.5; // 调整滚动速度
+            });
+
+            // 鼠标拖拽功能
+            gallery.addEventListener('mousedown', (e) => {
+                isDown = true;
+                gallery.classList.add('active');
+                startX = e.pageX - gallery.offsetLeft;
+                scrollLeft = gallery.scrollLeft;
+            });
+
+            gallery.addEventListener('mouseleave', () => {
+                isDown = false;
+                gallery.classList.remove('active');
+            });
+
+            gallery.addEventListener('mouseup', () => {
+                isDown = false;
+                gallery.classList.remove('active');
+            });
+
+            gallery.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - gallery.offsetLeft;
+                const walk = (x - startX) * 1.5; // 调整拖拽速度
+                gallery.scrollLeft = scrollLeft - walk;
+            });
+
+            // 触摸设备支持
+            gallery.addEventListener('touchstart', (e) => {
+                isDown = true;
+                startX = e.touches[0].pageX - gallery.offsetLeft;
+                scrollLeft = gallery.scrollLeft;
+            });
+
+            gallery.addEventListener('touchend', () => {
+                isDown = false;
+            });
+
+            gallery.addEventListener('touchmove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.touches[0].pageX - gallery.offsetLeft;
+                const walk = (x - startX) * 1.5;
+                gallery.scrollLeft = scrollLeft - walk;
             });
         }
 
