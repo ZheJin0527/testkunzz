@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { IMAGES } from '../config/images';
 
 const ValuesSection = () => {
     const [activeCard, setActiveCard] = useState(null);
@@ -28,7 +29,7 @@ const ValuesSection = () => {
 
     return (
         <div className="relative min-h-screen bg-cover bg-center bg-no-repeat bg-scroll flex items-center justify-center py-16 px-5 overflow-hidden"
-             style={{backgroundImage: "url('images/vision.png')"}}>
+             style={{backgroundImage: `url('${IMAGES.vision}')`}}>
             {/* 遮罩层 */}
             <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 z-10 pointer-events-none"></div>
             

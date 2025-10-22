@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { IMAGES } from '../config/images';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -154,7 +155,7 @@ const HeroSection = () => {
                 {/* 背景内容 */}
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center opacity-50 scale-100" ref={backgroundRef}>
                     <img 
-                        src="images/tokyorestaurant.webp" 
+                        src={IMAGES.tokyoRestaurant} 
                         alt="Japanese Restaurant" 
                         className="w-full h-full object-cover brightness-60 scale-100"
                         ref={restaurantImageRef}
@@ -164,7 +165,7 @@ const HeroSection = () => {
                 {/* Logo和标题 */}
                 <div className="absolute top-1/2 left-1/2 text-center text-white z-[25] opacity-100" ref={contentOverlayRef}>
                     <div className="w-32 h-32 bg-tokyo-gold rounded-full mx-auto mb-8 flex items-center justify-center shadow-2xl overflow-hidden" ref={logoRef}>
-                        <img src="images/tokyologo.png" alt="Tokyo Logo" className="w-full h-full object-cover" />
+                        <img src={IMAGES.tokyoLogo} alt="Tokyo Logo" className="w-full h-full object-cover" />
                     </div>
                     <h1 className="text-6xl font-bold tracking-widest mb-5 text-shadow-lg" ref={titleRef}>TOKYO JAPANESE CUISINE</h1>
                     <p className="text-2xl tracking-wider mb-2 opacity-90" ref={subtitleRef}>精致美食·品越服务</p>
@@ -174,13 +175,13 @@ const HeroSection = () => {
                 {/* 四个门 */}
                 <div className="absolute top-0 left-0 w-full h-full z-10 pointer-events-none">
                     <div className="absolute top-0 left-0 w-1/4 h-full bg-cover bg-center overflow-hidden shadow-inner origin-center" 
-                         style={{backgroundImage: "url('images/Shoji.svg')"}} ref={door1Ref}></div>
+                         style={{backgroundImage: `url('${IMAGES.shoji}')`}} ref={door1Ref}></div>
                     <div className="absolute top-0 left-1/4 w-1/4 h-full bg-cover bg-center overflow-hidden shadow-inner origin-center" 
-                         style={{backgroundImage: "url('images/Shoji.svg')"}} ref={door2Ref}></div>
+                         style={{backgroundImage: `url('${IMAGES.shoji}')`}} ref={door2Ref}></div>
                     <div className="absolute top-0 left-1/2 w-1/4 h-full bg-cover bg-center overflow-hidden shadow-inner origin-center" 
-                         style={{backgroundImage: "url('images/Shoji.svg')"}} ref={door3Ref}></div>
+                         style={{backgroundImage: `url('${IMAGES.shoji}')`}} ref={door3Ref}></div>
                     <div className="absolute top-0 right-0 w-1/4 h-full bg-cover bg-center overflow-hidden shadow-inner origin-center" 
-                         style={{backgroundImage: "url('images/Shoji.svg')"}} ref={door4Ref}></div>
+                         style={{backgroundImage: `url('${IMAGES.shoji}')`}} ref={door4Ref}></div>
                 </div>
 
                 {/* 滚动提示 */}

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { IMAGES } from '../config/images';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -37,7 +38,7 @@ const AboutSection = () => {
             <div className="w-full h-screen flex items-center opacity-0" ref={aboutContainerRef}>
                 {/* 左侧图片 */}
                 <div className="flex-1 h-screen relative -translate-x-full opacity-0 overflow-hidden" ref={aboutImageRef}>
-                    <img src="images/chef.webp" alt="日本料理制作" className="w-full h-full object-cover brightness-70" />
+                    <img src={IMAGES.chef} alt="日本料理制作" className="w-full h-full object-cover brightness-70" />
                     <div className="absolute top-0 right-0 w-48 h-full bg-gradient-to-r from-transparent to-white z-10"></div>
                 </div>
 
@@ -55,24 +56,24 @@ const AboutSection = () => {
             {/* 樱花装饰 */}
             <div className="absolute -right-24 top-0 w-96 h-full pointer-events-none z-20 opacity-80">
                 <div className="absolute right-0 top-0 w-full h-full bg-no-repeat bg-contain bg-right-center" 
-                     style={{backgroundImage: "url('images/blossom.png')"}}></div>
+                     style={{backgroundImage: `url('${IMAGES.blossom}')`}}></div>
                 {/* 樱花花瓣 */}
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-0 top-0" 
-                     style={{backgroundImage: "url('images/petal1.png')", animationDuration: '8s', animationDelay: '0s', width: '35px', height: '35px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[0]}')`, animationDuration: '8s', animationDelay: '0s', width: '35px', height: '35px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 -left-16 top-0" 
-                     style={{backgroundImage: "url('images/petal2.png')", animationDuration: '10s', animationDelay: '1s', width: '42px', height: '42px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[1]}')`, animationDuration: '10s', animationDelay: '1s', width: '42px', height: '42px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-1/2 top-0" 
-                     style={{backgroundImage: "url('images/petal3.png')", animationDuration: '9s', animationDelay: '2s', width: '38px', height: '38px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[2]}')`, animationDuration: '9s', animationDelay: '2s', width: '38px', height: '38px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-16 top-0" 
-                     style={{backgroundImage: "url('images/petal4.png')", animationDuration: '11s', animationDelay: '0.5s', width: '40px', height: '40px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[3]}')`, animationDuration: '11s', animationDelay: '0.5s', width: '40px', height: '40px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-4/5 top-0" 
-                     style={{backgroundImage: "url('images/petal5.png')", animationDuration: '8.5s', animationDelay: '1.5s', width: '36px', height: '36px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[4]}')`, animationDuration: '8.5s', animationDelay: '1.5s', width: '36px', height: '36px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-1/2 top-0" 
-                     style={{backgroundImage: "url('images/petal6.png')", animationDuration: '10.5s', animationDelay: '2.5s', width: '44px', height: '44px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[5]}')`, animationDuration: '10.5s', animationDelay: '2.5s', width: '44px', height: '44px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-1/3 top-0" 
-                     style={{backgroundImage: "url('images/petal7.png')", animationDuration: '9.5s', animationDelay: '0.8s', width: '37px', height: '37px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[6]}')`, animationDuration: '9.5s', animationDelay: '0.8s', width: '37px', height: '37px'}}></div>
                 <div className="absolute w-10 h-10 bg-cover bg-center bg-no-repeat animate-fall rounded-full opacity-70 left-1/4 top-0" 
-                     style={{backgroundImage: "url('images/petal8.png')", animationDuration: '11.5s', animationDelay: '1.8s', width: '41px', height: '41px'}}></div>
+                     style={{backgroundImage: `url('${IMAGES.petals[7]}')`, animationDuration: '11.5s', animationDelay: '1.8s', width: '41px', height: '41px'}}></div>
             </div>
         </div>
     );

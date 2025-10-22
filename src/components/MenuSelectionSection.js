@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { IMAGES } from '../config/images';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,7 +24,7 @@ const MenuSelectionSection = () => {
 
     return (
         <div className="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center overflow-hidden py-16 px-5 font-besley" 
-             style={{backgroundImage: "url('images/menubg.webp')"}} id="menu-selection">
+             style={{backgroundImage: `url('${IMAGES.menuBg}')`}} id="menu-selection">
             {/* 遮罩层 */}
             <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-40 z-10 pointer-events-none"></div>
             
@@ -37,7 +38,7 @@ const MenuSelectionSection = () => {
                     </div>
                     
                     <div className="text-center text-white z-10 relative no-underline w-full h-full flex items-center justify-center">
-                        <img src="images/sushi.png" alt="寿司与刺身菜单" className="max-w-[80%] max-h-[80%] object-contain transition-transform duration-400 group-hover:scale-105" />
+                        <img src={IMAGES.sushi} alt="寿司与刺身菜单" className="max-w-[80%] max-h-[80%] object-contain transition-transform duration-400 group-hover:scale-105" />
                     </div>
                     
                     {/* 悬停效果 */}
@@ -53,7 +54,7 @@ const MenuSelectionSection = () => {
                     </div>
                     
                     <div className="text-center text-white z-10 relative no-underline w-full h-full flex items-center justify-center">
-                        <img src="images/grand.png" alt="精选菜单" className="max-w-[80%] max-h-[80%] object-contain transition-transform duration-400 group-hover:scale-105" />
+                        <img src={IMAGES.grand} alt="精选菜单" className="max-w-[80%] max-h-[80%] object-contain transition-transform duration-400 group-hover:scale-105" />
                     </div>
                     
                     {/* 悬停效果 */}
