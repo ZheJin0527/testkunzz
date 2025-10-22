@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Template</title>
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/Draggable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/InertiaPlugin.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -26,118 +30,26 @@
             position: relative;
         }
 
-        /* 页面标题区域 */
-        .page-header {
-            padding: 60px 80px 40px;
-            text-align: center;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-        }
-
-        .page-title {
-            font-size: 48px;
-            font-weight: 300;
-            color: #ffffff;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
-        }
-
-        .page-subtitle {
-            font-size: 18px;
-            color: #c8a068;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
-        }
-
-        .page-subtitle-en {
-            font-size: 16px;
-            color: #c8a068;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
 
         /* 菜单图片画廊 */
         .menu-gallery {
-            padding: 0 80px 80px;
             display: flex;
-            overflow-x: auto;
+            overflow: hidden;
             gap: 0;
-            scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: #c8a068 #2a2a2a;
+            user-select: none;
         }
 
-        .menu-gallery::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .menu-gallery::-webkit-scrollbar-track {
-            background: #2a2a2a;
-        }
-
-        .menu-gallery::-webkit-scrollbar-thumb {
-            background: #c8a068;
-            border-radius: 4px;
-        }
-
-        .menu-gallery::-webkit-scrollbar-thumb:hover {
-            background: #b8945f;
+        .menu-gallery-container {
+            display: flex;
+            will-change: transform;
         }
 
         .menu-image {
             flex-shrink: 0;
             max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100vh;
         }
 
-        .menu-image:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        /* 装饰元素 */
-        .decoration-line {
-            position: absolute;
-            top: 50%;
-            right: 40px;
-            width: 2px;
-            height: 200px;
-            background: linear-gradient(to bottom, transparent, #c8a068, transparent);
-            transform: translateY(-50%);
-        }
-
-        /* 页脚免责声明 */
-        .disclaimer {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #888888;
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.5;
-        }
-
-        /* 滚动提示 */
-        .scroll-hint {
-            position: fixed;
-            right: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #c8a068;
-            font-size: 14px;
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            opacity: 0.7;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.7; }
-            50% { opacity: 1; }
-        }
 
         /* 加载动画 */
         .loading {
@@ -171,29 +83,11 @@
 
     <!-- 主内容区域 -->
     <div class="main-content">
-        <!-- 页面标题 -->
-        <div class="page-header">
-            <h1 class="page-title" id="page-title">页面标题</h1>
-            <p class="page-subtitle" id="page-subtitle">副标题</p>
-            <p class="page-subtitle-en" id="page-subtitle-en">SUBTITLE</p>
-        </div>
-
         <!-- 菜单图片画廊 -->
         <div class="menu-gallery" id="menu-gallery">
-            <!-- 图片将通过JavaScript动态加载 -->
-            <div class="loading">正在加载菜单图片...</div>
-        </div>
-
-        <!-- 装饰线条 -->
-        <div class="decoration-line"></div>
-
-        <!-- 滚动提示 -->
-        <div class="scroll-hint">← 左右滑动查看更多</div>
-
-        <!-- 免责声明 -->
-        <div class="disclaimer">
-            图片只供参考，请依照实物为准<br>
-            THE PICTURES ARE FOR REFERENCE ONLY, PLEASE REFER TO THE ACTUAL PRODUCT
+            <div class="menu-gallery-container" id="gallery-container">
+                <!-- 图片将通过JavaScript自动加载 -->
+            </div>
         </div>
     </div>
 
@@ -304,10 +198,10 @@
 
         // 自动加载菜单图片
         async function loadMenuImages(baseUrl, categoryName) {
-            const gallery = document.getElementById('menu-gallery');
+            const container = document.getElementById('gallery-container');
             
             // 显示加载动画
-            gallery.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
+            container.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
             
             let imageIndex = 1;
             const loadedImages = [];
@@ -315,7 +209,7 @@
             
             // 尝试加载图片，直到找不到为止
             while (!shouldStop) {
-                const imageUrl = `${baseUrl}${imageIndex}.png`;
+                const imageUrl = `${baseUrl}${imageIndex}.jpg`;
                 
                 try {
                     const response = await fetch(imageUrl, { method: 'HEAD' });
@@ -350,21 +244,124 @@
             // 更新画廊显示
             function updateGallery() {
                 if (loadedImages.length > 0) {
-                    gallery.innerHTML = '';
+                    container.innerHTML = '';
                     loadedImages.forEach(img => {
-                        gallery.appendChild(img);
+                        container.appendChild(img);
                     });
+                    // 图片加载完成后初始化GSAP拖拽
+                    initGSAPDraggable();
                 } else {
-                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
                 }
             }
             
             // 如果3秒后还没有加载到任何图片，显示错误信息
             setTimeout(() => {
                 if (loadedImages.length === 0) {
-                    gallery.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
                 }
             }, 3000);
+        }
+
+        // GSAP Draggable 初始化
+        function initGSAPDraggable() {
+            const gallery = document.getElementById('menu-gallery');
+            const container = document.getElementById('gallery-container');
+            
+            // 等待图片加载完成后再计算尺寸
+            setTimeout(() => {
+                // 重新计算可拖拽的范围
+                const galleryWidth = gallery.offsetWidth;
+                const containerWidth = container.scrollWidth;
+                const maxDrag = Math.max(0, containerWidth - galleryWidth);
+                
+                console.log('Gallery width:', galleryWidth);
+                console.log('Container width:', containerWidth);
+                console.log('Max drag:', maxDrag);
+                
+                // 检测是否为触摸设备
+                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                
+                if (isTouchDevice) {
+                    // 触摸设备使用原生滑动
+                    initTouchScroll();
+                } else {
+                    // 桌面设备使用GSAP Draggable
+                    Draggable.create(container, {
+                        type: "x",
+                        bounds: { minX: -maxDrag, maxX: 0 },
+                        inertia: true,
+                        dragResistance: 0.1,
+                        throwResistance: 2000,
+                        onDragStart: function() {
+                            // 拖拽开始时改变光标
+                            gallery.style.cursor = 'grabbing';
+                        },
+                        onDrag: function() {
+                            // 拖拽时的回调
+                        },
+                        onDragEnd: function() {
+                            // 拖拽结束时恢复光标
+                            gallery.style.cursor = 'grab';
+                        },
+                        onThrowComplete: function() {
+                            // 惯性滚动完成时的回调
+                        }
+                    });
+                    
+                    // 设置初始光标状态
+                    gallery.style.cursor = 'grab';
+                }
+                
+                // 鼠标滚轮水平滚动
+                gallery.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const currentX = gsap.getProperty(container, "x") || 0;
+                    const newX = Math.max(-maxDrag, Math.min(0, currentX + e.deltaY * 0.5));
+                    gsap.to(container, { x: newX, duration: 0.3, ease: "power2.out" });
+                });
+            }, 100);
+        }
+
+        // 触摸设备滑动功能
+        function initTouchScroll() {
+            const gallery = document.getElementById('menu-gallery');
+            const container = document.getElementById('gallery-container');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            
+            // 等待图片加载完成后再计算尺寸
+            setTimeout(() => {
+                // 触摸开始
+                gallery.addEventListener('touchstart', (e) => {
+                    isDown = true;
+                    startX = e.touches[0].pageX - gallery.offsetLeft;
+                    scrollLeft = gsap.getProperty(container, "x") || 0;
+                });
+
+                // 触摸结束
+                gallery.addEventListener('touchend', () => {
+                    isDown = false;
+                });
+
+                // 触摸移动
+                gallery.addEventListener('touchmove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.touches[0].pageX - gallery.offsetLeft;
+                    const walk = (x - startX) * 1.5;
+                    const newX = scrollLeft + walk;
+                    
+                    // 计算边界
+                    const galleryWidth = gallery.offsetWidth;
+                    const containerWidth = container.scrollWidth;
+                    const maxDrag = Math.max(0, containerWidth - galleryWidth);
+                    const boundedX = Math.max(-maxDrag, Math.min(0, newX));
+                    
+                    gsap.set(container, { x: boundedX });
+                });
+            }, 100);
         }
 
         // 初始化页面
