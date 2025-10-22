@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+  
+  body {
+    @apply font-arial bg-tokyo-gray overflow-x-hidden;
+  }
+  
+  .App {
+    @apply w-full min-h-screen;
+  }
+}
+
+@layer components {
+  /* 自定义组件样式 */
+  .glass-effect {
+    @apply bg-white bg-opacity-5 backdrop-blur-md border border-white border-opacity-20;
+  }
+  
+  .tokyo-gold-border {
+    @apply border-4 border-tokyo-gold;
+  }
+  
+  .vertical-text {
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+  }
+  
+  /* 文本阴影效果 */
+  .text-shadow-lg {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+  }
+  
+  .text-shadow-sm {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* 阴影效果 */
+  .shadow-3xl {
+    box-shadow: 0 25px 80px 0 rgba(0, 0, 0, 0.5);
+  }
+}
