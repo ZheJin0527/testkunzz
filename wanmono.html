@@ -191,7 +191,7 @@
             const loadedImages = [];
             let shouldStop = false;
             
-            // 尝试加载图片，直到找不到为止
+            // 尝试加载图片，跳过不存在的图片
             while (!shouldStop) {
                 const imageUrl = `${baseUrl}${imageIndex}.jpg`;
                 
@@ -207,16 +207,16 @@
                             updateGallery();
                         };
                         img.onerror = function() {
-                            // 如果图片加载失败，标记停止
-                            shouldStop = true;
+                            // 如果图片加载失败，继续尝试下一张
+                            console.log(`图片 ${imageIndex}.jpg 加载失败，跳过`);
                         };
                     } else {
-                        // 如果HTTP状态不是200，停止尝试
-                        shouldStop = true;
+                        // 如果HTTP状态不是200，继续尝试下一张
+                        console.log(`图片 ${imageIndex}.jpg 不存在，跳过`);
                     }
                 } catch (error) {
-                    // 如果请求失败，停止尝试
-                    shouldStop = true;
+                    // 如果请求失败，继续尝试下一张
+                    console.log(`请求 ${imageIndex}.jpg 失败，跳过`);
                 }
                 
                 imageIndex++;
