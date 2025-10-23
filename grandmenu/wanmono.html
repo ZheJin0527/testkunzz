@@ -196,9 +196,10 @@
                 '16.jpg', '17.jpg', '18.jpg', '19.jpg', '20.jpg'
             ];
             
-            const loadedImages = [];
+            let hasImages = false;
+            let imagesLoaded = 0;
             
-            // 按顺序加载图片
+            // 按顺序加载图片，每张图片加载完成后立即显示
             for (const imageFile of imageList) {
                 const imageUrl = `${baseUrl}${imageFile}`;
                 
@@ -210,13 +211,24 @@
                         img.alt = `碗物菜单页面${imageFile}`;
                         img.className = 'menu-image';
                         
-                        // 等待图片加载完成
-                        await new Promise((resolve, reject) => {
-                            img.onload = resolve;
-                            img.onerror = reject;
-                        });
+                        // 图片加载完成后立即添加到容器中
+                        img.onload = function() {
+                            if (!hasImages) {
+                                container.innerHTML = '';
+                                hasImages = true;
+                            }
+                            container.appendChild(img);
+                            imagesLoaded++;
+                            
+                            // 当第一张图片加载完成时初始化拖拽功能
+                            if (imagesLoaded === 1) {
+                                setTimeout(() => initGSAPDraggable(), 100);
+                            }
+                        };
                         
-                        loadedImages.push(img);
+                        img.onerror = function() {
+                            // 图片加载失败，跳过
+                        };
                     }
                 } catch (error) {
                     // 如果图片不存在，跳过
@@ -224,18 +236,12 @@
                 }
             }
             
-            // 直接显示所有加载成功的图片
-            if (loadedImages.length > 0) {
-                container.innerHTML = '';
-                loadedImages.forEach(img => {
-                    container.appendChild(img);
-                });
-                // 图片加载完成后初始化GSAP拖拽
-                initGSAPDraggable();
-            } else {
-                container.innerHTML = '<div class="loading">未找到菜单图片</div>';
-            }
-        }
+            // 如果没有找到任何图片，显示错误信息
+            setTimeout(() => {
+                if (!hasImages) {
+                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                }
+            }, 1000);
         
         // 页面加载完成后开始加载图片
         document.addEventListener('DOMContentLoaded', loadMenuImages);
