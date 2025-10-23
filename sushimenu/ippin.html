@@ -179,164 +179,60 @@
     </div>
 
     <script>
-        // 自动加载菜单图片
+                // 自动加载菜单图片
         async function loadMenuImages() {
             const container = document.getElementById('gallery-container');
             const baseUrl = '/sushi/ippin/';
             
-            // 显示加载动画
-            container.innerHTML = '<div class="loading">正在加载菜单图片...</div>';
+            // 预定义图片列表，按正确顺序排列
+            const imageList = [
+                '1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', 
+                '6.jpg', '7.jpg', '8.jpg', '9.jpg', '10.jpg',
+                '11.jpg', '12.jpg', '13.jpg', '14.jpg', '15.jpg',
+                '16.jpg', '17.jpg', '18.jpg', '19.jpg', '20.jpg'
+            ];
             
-            let imageIndex = 1;
             const loadedImages = [];
-            let shouldStop = false;
             
-            // 尝试加载图片，直到找不到为止
-            while (!shouldStop) {
-                const imageUrl = `${baseUrl}${imageIndex}.jpg`;
+            // 按顺序加载图片
+            for (const imageFile of imageList) {
+                const imageUrl = `${baseUrl}${imageFile}`;
                 
                 try {
                     const response = await fetch(imageUrl, { method: 'HEAD' });
                     if (response.ok) {
                         const img = document.createElement('img');
                         img.src = imageUrl;
-                        img.alt = `一品菜单页面${imageIndex}`;
+                        img.alt = `一品寿司菜单页面${imageFile}`;
                         img.className = 'menu-image';
-                        img.onload = function() {
-                            loadedImages.push(img);
-                            updateGallery();
-                        };
-                        img.onerror = function() {
-                            // 如果图片加载失败，标记停止
-                            shouldStop = true;
-                        };
-                    } else {
-                        // 如果HTTP状态不是200，停止尝试
-                        shouldStop = true;
+                        
+                        // 等待图片加载完成
+                        await new Promise((resolve, reject) => {
+                            img.onload = resolve;
+                            img.onerror = reject;
+                        });
+                        
+                        loadedImages.push(img);
                     }
                 } catch (error) {
-                    // 如果请求失败，停止尝试
-                    shouldStop = true;
-                }
-                
-                imageIndex++;
-                
-                // 防止无限循环，最多尝试50张图片
-                if (imageIndex > 50) shouldStop = true;
-            }
-            
-            // 更新画廊显示
-            function updateGallery() {
-                if (loadedImages.length > 0) {
-                    container.innerHTML = '';
-                    loadedImages.forEach(img => {
-                        container.appendChild(img);
-                    });
-                    // 图片加载完成后初始化GSAP拖拽
-                    initGSAPDraggable();
-                } else {
-                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
+                    // 如果图片不存在，跳过
+                    continue;
                 }
             }
             
-            // 如果3秒后还没有加载到任何图片，显示错误信息
-            setTimeout(() => {
-                if (loadedImages.length === 0) {
-                    container.innerHTML = '<div class="loading">未找到菜单图片</div>';
-                }
-            }, 3000);
+            // 直接显示所有加载成功的图片
+            if (loadedImages.length > 0) {
+                container.innerHTML = '';
+                loadedImages.forEach(img => {
+                    container.appendChild(img);
+                });
+                // 图片加载完成后初始化GSAP拖拽
+                initGSAPDraggable();
+            } else {
+                container.innerHTML = '<div class="loading">未找到菜单图片</div>';
+            }
         }
         
-        // GSAP Draggable 初始化
-        function initGSAPDraggable() {
-            const gallery = document.getElementById('menu-gallery');
-            const container = document.getElementById('gallery-container');
-            
-            // 等待图片加载完成后再计算尺寸
-            setTimeout(() => {
-                // 重新计算可拖拽的范围
-                const galleryWidth = gallery.offsetWidth;
-                const containerWidth = container.scrollWidth;
-                const maxDrag = Math.max(0, containerWidth - galleryWidth);
-                
-                console.log('Gallery width:', galleryWidth);
-                console.log('Container width:', containerWidth);
-                console.log('Max drag:', maxDrag);
-                
-                // 检测是否为触摸设备
-                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-                
-                if (isTouchDevice) {
-                    // 触摸设备使用原生滑动
-                    initTouchScroll();
-                } else {
-                    // 桌面设备使用GSAP Draggable
-                    Draggable.create(container, {
-                        type: "x",
-                        bounds: { minX: -maxDrag, maxX: 0 },
-                        inertia: true,
-                        dragResistance: 0.1,
-                        throwResistance: 2000,
-                        onDrag: function() {
-                            // 拖拽时的回调
-                        },
-                        onThrowComplete: function() {
-                            // 惯性滚动完成时的回调
-                        }
-                    });
-                }
-                
-                // 鼠标滚轮水平滚动
-                gallery.addEventListener('wheel', (e) => {
-                    e.preventDefault();
-                    const currentX = gsap.getProperty(container, "x") || 0;
-                    const newX = Math.max(-maxDrag, Math.min(0, currentX + e.deltaY * 0.5));
-                    gsap.to(container, { x: newX, duration: 0.3, ease: "power2.out" });
-                });
-            }, 100);
-        }
-
-        // 触摸设备滑动功能
-        function initTouchScroll() {
-            const gallery = document.getElementById('menu-gallery');
-            const container = document.getElementById('gallery-container');
-            let isDown = false;
-            let startX;
-            let scrollLeft;
-            
-            // 等待图片加载完成后再计算尺寸
-            setTimeout(() => {
-                // 触摸开始
-                gallery.addEventListener('touchstart', (e) => {
-                    isDown = true;
-                    startX = e.touches[0].pageX - gallery.offsetLeft;
-                    scrollLeft = gsap.getProperty(container, "x") || 0;
-                });
-
-                // 触摸结束
-                gallery.addEventListener('touchend', () => {
-                    isDown = false;
-                });
-
-                // 触摸移动
-                gallery.addEventListener('touchmove', (e) => {
-                    if (!isDown) return;
-                    e.preventDefault();
-                    const x = e.touches[0].pageX - gallery.offsetLeft;
-                    const walk = (x - startX) * 1.5;
-                    const newX = scrollLeft + walk;
-                    
-                    // 计算边界
-                    const galleryWidth = gallery.offsetWidth;
-                    const containerWidth = container.scrollWidth;
-                    const maxDrag = Math.max(0, containerWidth - galleryWidth);
-                    const boundedX = Math.max(-maxDrag, Math.min(0, newX));
-                    
-                    gsap.set(container, { x: boundedX });
-                });
-            }, 100);
-        }
-
         // 页面加载完成后开始加载图片
         document.addEventListener('DOMContentLoaded', loadMenuImages);
     </script>
