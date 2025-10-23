@@ -3,7 +3,7 @@ name: Build and Deploy to Hostinger FTP
 on:
   push:
     branches:
-      - main  # 如果你的分支是 master，请改成 master
+      - main
 
 jobs:
   build-and-deploy:
@@ -22,7 +22,7 @@ jobs:
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: 147.93.78.131
+          server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
