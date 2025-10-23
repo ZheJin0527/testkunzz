@@ -172,7 +172,7 @@ const HeroSection = () => {
                         <img src={IMAGES.tokyoLogo} alt="Tokyo Logo" className="w-full h-full object-cover" />
                     </div>
                     <h1 className="text-6xl font-bold tracking-widest mb-5 text-shadow-lg" ref={titleRef}>TOKYO JAPANESE CUISINE</h1>
-                    <p className="text-2xl tracking-wider mb-2 opacity-90" ref={subtitleRef}>精致美食·品越服务1</p>
+                    <p className="text-2xl tracking-wider mb-2 opacity-90" ref={subtitleRef}>精致美食·品越服务</p>
                     <p className="text-2xl tracking-wider mb-2 opacity-90" ref={subtitleRef}>成就世界级日料品牌</p>
                 </div>
 
