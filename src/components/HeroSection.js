@@ -32,7 +32,11 @@ const HeroSection = () => {
             height: 200
         });
 
-        gsap.set([titleRef.current, subtitleRef.current], {
+        gsap.set([titleRef.current], {
+            opacity: 0
+        });
+
+        gsap.set(subtitleRef.current, {
             opacity: 0
         });
 
@@ -50,23 +54,23 @@ const HeroSection = () => {
         tl.to(door2Ref.current, {
             x: '-100%',
             scale: 1.3,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.inOut'
         }, 0)
         .to(door3Ref.current, {
             x: '100%',
             scale: 1.3,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.inOut'
         }, 0)
         .to(door1Ref.current, {
             scale: 1.3,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.inOut'
         }, 0)
         .to(door4Ref.current, {
             scale: 1.3,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.inOut'
         }, 0)
         
@@ -74,12 +78,12 @@ const HeroSection = () => {
         .to(backgroundRef.current, {
             opacity: 1,
             scale: 1.4,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.out'
         }, 0)
         .to(restaurantImageRef.current, {
             scale: 1.3,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.out'
         }, 0)
         
@@ -87,14 +91,14 @@ const HeroSection = () => {
         .to(logoRef.current, {
             width: 120,
             height: 120,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.out'
         }, 0)
         
         // 整体内容放大
         .to(contentOverlayRef.current, {
             scale: 1.15,
-            duration: 1,
+            duration: 1.5,
             ease: 'power2.out'
         }, 0.2)
         
@@ -108,14 +112,14 @@ const HeroSection = () => {
             opacity: 0.9,
             duration: 0.8,
             ease: 'power2.out'
-        }, 0.3)
+        }, 1.6)
         
         // 滚动提示淡出
         .to(scrollHintRef.current, {
             opacity: 0,
             duration: 0.3,
             ease: 'power2.in'
-        }, 0);
+        }, 2.0);
 
         // 鼠标视差效果
         const handleMouseMove = (e) => {
@@ -150,7 +154,7 @@ const HeroSection = () => {
     }, []);
 
     return (
-        <div className="h-[150vh] relative">
+        <div className="h-[200vh] relative">
             <div className="h-screen fixed top-0 left-0 w-full overflow-hidden z-10" ref={sceneRef}>
                 {/* 背景内容 */}
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center opacity-50 scale-100" ref={backgroundRef}>
@@ -185,7 +189,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* 滚动提示 */}
-                <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 text-gray-900 text-sm tracking-wider z-[26] animate-bounce-slow" ref={scrollHintRef}>
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-gray-900 text-sm tracking-wider z-[26] animate-bounce-slow" ref={scrollHintRef}>
                     <div className="w-6 h-9 border-2 border-gray-900 rounded-xl mx-auto mb-2 relative">
                         <div className="absolute top-1.5 left-1/2 transform -translate-x-1/2 w-1 h-2 bg-gray-900 rounded-sm animate-scroll"></div>
                     </div>
