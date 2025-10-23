@@ -1,9 +1,9 @@
-name: Deploy React App to Hostinger (test.kunzzgroup.com)
+name: Build and Deploy to Hostinger FTP
 
 on:
   push:
     branches:
-      - main
+      - main  # 如果你的分支是 master，请改成 master
 
 jobs:
   build-and-deploy:
@@ -13,13 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build project
         run: npm run build
@@ -27,9 +22,11 @@ jobs:
       - name: Deploy to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
-          server: ${{ secrets.FTP_HOST }}
+          server: 147.93.78.131
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
           local-dir: build/
           server-dir: /public_html/
-          server-dir: ${{ secrets.FTP_PATH }}
+          timeout: 60000
