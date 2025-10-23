@@ -1,13 +1,19 @@
 {
-    "builds": [
-      {
-        "src": "package.json",
-        "use": "@vercel/static-build",
-        "config": { "distDir": "build" }
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@hostinger/static-build",
+      "config": {
+        "distDir": "build",
+        "buildCommand": "npm run build"
       }
-    ],
-    "routes": [
-      { "src": "/(.*)", "dest": "/index.html" }
-    ]
-  }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
   
