@@ -182,8 +182,8 @@
 
     </div>
 
-    <script>
-                // 自动加载菜单图片
+        <script>
+        // 自动加载菜单图片
         async function loadMenuImages() {
             const container = document.getElementById('gallery-container');
             const baseUrl = '/grand/ippin/';
@@ -242,7 +242,98 @@
                     container.innerHTML = '<div class="loading">未找到菜单图片</div>';
                 }
             }, 1000);
+        }
         
+        // GSAP Draggable 初始化
+        function initGSAPDraggable() {
+            const gallery = document.getElementById('menu-gallery');
+            const container = document.getElementById('gallery-container');
+            
+            // 等待图片加载完成后再计算尺寸
+            setTimeout(() => {
+                // 重新计算可拖拽的范围
+                const galleryWidth = gallery.offsetWidth;
+                const containerWidth = container.scrollWidth;
+                const maxDrag = Math.max(0, containerWidth - galleryWidth);
+                
+                console.log('Gallery width:', galleryWidth);
+                console.log('Container width:', containerWidth);
+                console.log('Max drag:', maxDrag);
+                
+                // 检测是否为触摸设备
+                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                
+                if (isTouchDevice) {
+                    // 触摸设备使用原生滑动
+                    initTouchScroll();
+                } else {
+                    // 桌面设备使用GSAP Draggable
+                    Draggable.create(container, {
+                        type: "x",
+                        bounds: { minX: -maxDrag, maxX: 0 },
+                        inertia: true,
+                        dragResistance: 0.1,
+                        throwResistance: 2000,
+                        onDrag: function() {
+                            // 拖拽时的回调
+                        },
+                        onThrowComplete: function() {
+                            // 惯性滚动完成时的回调
+                        }
+                    });
+                }
+                
+                // 鼠标滚轮水平滚动
+                gallery.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const currentX = gsap.getProperty(container, "x") || 0;
+                    const newX = Math.max(-maxDrag, Math.min(0, currentX + e.deltaY * 0.5));
+                    gsap.to(container, { x: newX, duration: 0.3, ease: "power2.out" });
+                });
+            }, 100);
+        }
+
+        // 触摸设备滑动功能
+        function initTouchScroll() {
+            const gallery = document.getElementById('menu-gallery');
+            const container = document.getElementById('gallery-container');
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            
+            // 等待图片加载完成后再计算尺寸
+            setTimeout(() => {
+                // 触摸开始
+                gallery.addEventListener('touchstart', (e) => {
+                    isDown = true;
+                    startX = e.touches[0].pageX - gallery.offsetLeft;
+                    scrollLeft = gsap.getProperty(container, "x") || 0;
+                });
+
+                // 触摸结束
+                gallery.addEventListener('touchend', () => {
+                    isDown = false;
+                });
+
+                // 触摸移动
+                gallery.addEventListener('touchmove', (e) => {
+                    if (!isDown) return;
+                    e.preventDefault();
+                    const x = e.touches[0].pageX - gallery.offsetLeft;
+                    const walk = (x - startX) * 1.5;
+                    const newX = scrollLeft + walk;
+                    
+                    // 计算边界
+                    const galleryWidth = gallery.offsetWidth;
+                    const containerWidth = container.scrollWidth;
+                    const maxDrag = Math.max(0, containerWidth - galleryWidth);
+                    const boundedX = Math.max(-maxDrag, Math.min(0, newX));
+                    
+                    gsap.set(container, { x: boundedX });
+                });
+            }, 100);
+        }
+
         // 页面加载完成后开始加载图片
         document.addEventListener('DOMContentLoaded', loadMenuImages);
     </script>
